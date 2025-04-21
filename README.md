@@ -1,54 +1,85 @@
-# React + TypeScript + Vite
+# Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive task management application built with React and Tailwind CSS. This is a **practice project** created to learn and demonstrate modern front-end development techniques. It features an intuitive interface with task creation, calendar integration, and progress statistics.
 
-Currently, two official plugins are available:
+![Screenshot of Todo App](screenshot.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## About This Project
 
-## Expanding the ESLint configuration
+This Todo App was built as a learning exercise to practice:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React component architecture and state management
+- TypeScript type safety and interfaces
+- Tailwind CSS for responsive styling
+- Modern UI/UX design principles
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+While fully functional, this project is primarily for educational purposes rather than production use.
+
+## Features
+
+- ✅ Create, edit, and delete tasks
+- 📅 Calendar integration for date-based task filtering
+- 📊 Task statistics dashboard
+- 📱 Fully responsive design
+- 🎨 Modern UI with Tailwind CSS
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or later)
+- yarn
+
+### Installation
+
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/yourusername/todo-app.git
+   cd todo-app
+   ```
+
+2. Install dependencies
+
+   ```bash
+   yarn
+   ```
+
+3. Start the development server
+
+   ```bash
+   yarn dev
+   ```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## Project Structure
+
+```text
+src/
+  ├── assets/        # Static assets like images
+  ├── components/    # React components
+  │   ├── AppLayout.tsx
+  │   ├── CalendarView.tsx
+  │   ├── Headers.tsx
+  │   ├── TaskForm.tsx
+  │   ├── TaskItem.tsx
+  │   └── TaskList.tsx
+  ├── styles/        # CSS and styling files
+  └── App.tsx        # Main application component
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Technologies Used
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- [React](https://reactjs.org/) - Frontend library
+- [TypeScript](https://www.typescriptlang.org/) - Type-safe JavaScript
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
+- [Vite](https://vitejs.dev/) - Frontend build tool
+- [React Calendar](https://www.npmjs.com/package/react-calendar) - Calendar component
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+## Future Enhancements
+
+- Dark/light mode toggle
+- Task categories and tags
+- Data persistence with backend integration
+- Notifications and reminders
