@@ -1,45 +1,91 @@
 .calendar-container {
-  /* Center the calendar */
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 
-/* Override default styles */
 .react-calendar {
   width: 100%;
-  max-width: 400px;
+  max-width: 90%;
   background-color: white;
   border: none;
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   font-family: inherit;
+  line-height: 1.125em;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  height: 44px;
+  margin-bottom: 0.25em;
+}
+
+.react-calendar__navigation button {
+  min-width: 44px;
+  background: none;
+  color: #374151;
+  font-weight: 500;
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.75em;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.react-calendar__month-view__days__day {
+  padding: 0.4em;
+}
+
+/* Style for the weekdays in the header */
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5em;
+}
+
+/* Weekend days */
+.react-calendar__month-view__days__day--weekend {
+  color: #ef4444;
 }
 
 /* Style for when hovering over a day */
 .react-calendar__tile:hover {
-  background-color: #fdf2f2; /* Light rose color */
+  background-color: #fee2e2;
+  color: #111827;
 }
 
 /* Style for the selected day */
 .react-calendar__tile--active {
-  background: #f43f5e !important; /* Rose-500 */
+  background: #f43f5e !important;
   color: white !important;
+  font-weight: bold;
 }
 
 /* Style for today */
 .react-calendar__tile--now {
-  background: #fecdd3; /* Rose-200 */
-  color: #4b5563; /* Gray-600 */
+  background: #fee2e2;
+  color: #111827;
 }
 
 /* Navigation buttons */
-.react-calendar__navigation button {
-  color: #f43f5e; /* Rose-500 */
-  font-weight: bold;
+.react-calendar__navigation button:hover,
+.react-calendar__navigation button:focus {
+  background-color: #fee2e2;
+  border-radius: 0.25rem;
 }
 
 /* Month and year header */
 .react-calendar__navigation__label__labelText {
-  font-weight: bold;
-  color: #4b5563; /* Gray-600 */
+  font-weight: 500;
+  color: #111827;
+}
+
+/* Navigation arrows */
+.react-calendar__navigation__arrow {
+  font-size: 1.5em;
+}
+
+/* Outside days (days from other months) */
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #9ca3af;
 }

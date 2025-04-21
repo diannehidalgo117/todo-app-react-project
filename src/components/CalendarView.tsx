@@ -21,34 +21,38 @@ const CalendarView = () => {
   };
 
   const getFormattedDate = (date: Date): string => {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = date.toLocaleDateString("en-US", { month: "long" });
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
+    return `${date.toLocaleString("default", {
+      month: "long"
+    })} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
+  // TODO: add logic to go back to today's date
   return (
-    <div className="p-4 bg-white rounded-lg shadow-sm">
+    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       {/* Display the selected date and day name */}
       {date instanceof Date && (
-        <div className="mb-4 text-center">
-          <h2 className="text-xl font-light text-rose-400">
-            {getDayName(date)}
-          </h2>
-          <p className="text-3xl font-bold text-gray-800">
+        <div className="text-center py-6">
+          <h2 className="text-rose-400 font-normal">{getDayName(date)}</h2>
+          <p className="text-2xl font-bold text-gray-800 mt-1">
             {getFormattedDate(date)}
           </p>
         </div>
       )}
 
-      <div className="calendar-container ">
+      <div className="calendar-container w-full py-0 pt-0 pb-3">
         <Calendar
           onChange={handleDateChange}
           value={date}
           className="rounded-md border-none"
+          navigationLabel={({ date }) =>
+            `${date.toLocaleString("default", {
+              month: "long"
+            })} ${date.getFullYear()}`
+          }
         />
       </div>
     </div>
   );
 };
+
 export default CalendarView;

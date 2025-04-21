@@ -8,8 +8,6 @@ interface TaskItemProps {
 }
 
 const TaskItem = ({ title, description, dueDate }: TaskItemProps) => {
-  // TODO: Add edit, delete, and done functionality
-
   return (
     <div
       className="relative flex flex-col my-6 bg-white shadow-sm border

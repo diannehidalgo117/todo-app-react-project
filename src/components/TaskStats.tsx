@@ -26,25 +26,87 @@ const TaskStats = ({ tasks = [] }: TaskStatsProps) => {
   }, [tasks]);
 
   return (
-    <div className="flex flex-wrap items-center justify-center w-full py-6 space-x-4 bg-rose-50 rounded-lg">
-      {/* Completed tasks */}
-      <div className="flex flex-col items-center p-4 bg-white shadow-sm rounded-xl border border-rose-100 w-64">
-        <h4 className="text-lg font-semibold text-rose-600">Completed Tasks</h4>
-        <p className="text-4xl font-bold text-gray-800 mt-2">
-          {completedTasks}
-        </p>
-      </div>
+    <div className="w-full bg-gradient-to-r from-rose-50 to-rose-100 rounded-lg shadow-sm">
+      <div className="p-4">
+        <h3 className="text-xl font-bold text-rose-600 mb-4 text-center md:text-left">
+          Task Statistics
+        </h3>
 
-      {/* Pending tasks */}
-      <div className="flex flex-col items-center p-4 bg-white shadow-sm rounded-xl border border-rose-100 w-64">
-        <h4 className="text-lg font-semibold text-rose-600">Pending Tasks</h4>
-        <p className="text-4xl font-bold text-gray-800 mt-2">{pendingTasks}</p>
-      </div>
+        <div className="flex flex-wrap justify-center md:justify-between gap-4">
+          {/* Completed tasks */}
+          <div className="flex-1 min-w-[240px] flex items-center p-4 bg-white shadow-sm rounded-xl border border-rose-200 transition-all hover:shadow-md">
+            <div className="rounded-full bg-green-100 p-3 mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-lg font-medium text-gray-700">Completed</h4>
+              <p className="text-3xl font-bold text-gray-900">
+                {completedTasks}
+              </p>
+            </div>
+          </div>
 
-      {/* Tasks created */}
-      <div className="flex flex-col items-center p-4 bg-white shadow-sm rounded-xl border border-rose-100 w-64">
-        <h4 className="text-lg font-semibold text-rose-600">Tasks Created</h4>
-        <p className="text-4xl font-bold text-gray-800 mt-2">{tasksCreated}</p>
+          {/* Pending tasks */}
+          <div className="flex-1 min-w-[240px] flex items-center p-4 bg-white shadow-sm rounded-xl border border-rose-200 transition-all hover:shadow-md">
+            <div className="rounded-full bg-yellow-100 p-3 mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-yellow-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-lg font-medium text-gray-700">Pending</h4>
+              <p className="text-3xl font-bold text-gray-900">{pendingTasks}</p>
+            </div>
+          </div>
+
+          {/* Tasks created */}
+          <div className="flex-1 min-w-[240px] flex items-center p-4 bg-white shadow-sm rounded-xl border border-rose-200 transition-all hover:shadow-md">
+            <div className="rounded-full bg-blue-100 p-3 mr-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-blue-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+            </div>
+            <div>
+              <h4 className="text-lg font-medium text-gray-700">Total</h4>
+              <p className="text-3xl font-bold text-gray-900">{tasksCreated}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

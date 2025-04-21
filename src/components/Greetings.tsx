@@ -1,7 +1,12 @@
 const Greetings = () => {
   return (
-    <div className="flex flex-row items-center justify-center w-full h-min bg-rose-300 text-white font-bold">
-      <h1 className="m-2 p-1 text-4xl">Hello, Yanyan! Start planning today.</h1>
+    <div className="w-full bg-rose-50 rounded-lg shadow-sm">
+      <div className="py-6 px-8 text-center md:text-left">
+        <h1 className="text-3xl font-bold text-rose-600">Hello, Yanyan!</h1>
+        <p className="mt-2 text-gray-600 font-medium">
+          Start planning your day and stay productive.
+        </p>
+      </div>
     </div>
   );
 };
