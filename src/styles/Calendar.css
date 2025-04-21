@@ -1,0 +1,45 @@
+.calendar-container {
+  /* Center the calendar */
+  display: flex;
+  justify-content: center;
+}
+
+/* Override default styles */
+.react-calendar {
+  width: 100%;
+  max-width: 400px;
+  background-color: white;
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+}
+
+/* Style for when hovering over a day */
+.react-calendar__tile:hover {
+  background-color: #fdf2f2; /* Light rose color */
+}
+
+/* Style for the selected day */
+.react-calendar__tile--active {
+  background: #f43f5e !important; /* Rose-500 */
+  color: white !important;
+}
+
+/* Style for today */
+.react-calendar__tile--now {
+  background: #fecdd3; /* Rose-200 */
+  color: #4b5563; /* Gray-600 */
+}
+
+/* Navigation buttons */
+.react-calendar__navigation button {
+  color: #f43f5e; /* Rose-500 */
+  font-weight: bold;
+}
+
+/* Month and year header */
+.react-calendar__navigation__label__labelText {
+  font-weight: bold;
+  color: #4b5563; /* Gray-600 */
+}
