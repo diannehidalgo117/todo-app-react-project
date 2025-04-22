@@ -1,19 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NewTaskInput } from "../types/Task";
+import { formatToYYYYMMDD } from "../utils/dateUtils";
 
 interface TaskFormProps {
-  onAddTask: (taskData: NewTaskInput) => void;
+  onAddTask: (task: NewTaskInput) => void;
 }
 
 const TaskForm = ({ onAddTask }: TaskFormProps) => {
-  const [newTask, setNewTask] = useState<NewTaskInput>({
+  const [task, setTask] = useState<NewTaskInput>({
     title: "",
     description: "",
     dueDate: "",
     priority: "low",
     status: "pending",
-    createdAt: new Date().toISOString().split("T")[0] // YYYY-MM-DD format
+    createdAt: formatToYYYYMMDD(new Date()) // YYYY-MM-DD format
   });
+
+  // Update createdAt when the component mounts
+  useEffect(() => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      createdAt: formatToYYYYMMDD(new Date())
+    }));
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -21,7 +30,7 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
     >
   ) => {
     const { name, value } = e.target;
-    setNewTask((prevTask) => ({
+    setTask((prevTask) => ({
       ...prevTask,
       [name]: value
     }));
@@ -29,16 +38,16 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Call the onAddTask function passed from the parent component
-    onAddTask(newTask);
+    onAddTask(task);
+
     // Reset the form
-    setNewTask({
+    setTask({
       title: "",
       description: "",
       dueDate: "",
       priority: "low",
       status: "pending",
-      createdAt: new Date().toISOString().split("T")[0]
+      createdAt: formatToYYYYMMDD(new Date()) // Keep current date after reset
     });
   };
 
@@ -59,7 +68,7 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
             id="title"
             type="text"
             name="title"
-            value={newTask.title}
+            value={task.title}
             onChange={handleChange}
             placeholder="What needs to be done?"
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
@@ -80,7 +89,7 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
           <textarea
             id="description"
             name="description"
-            value={newTask.description}
+            value={task.description}
             onChange={handleChange}
             placeholder="Add details about this task..."
             rows={3}
@@ -104,7 +113,7 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
               id="dueDate"
               type="date"
               name="dueDate"
-              value={newTask.dueDate}
+              value={task.dueDate}
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 text-gray-900 focus:border-rose-500 focus:outline-none
@@ -123,7 +132,7 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
             <select
               id="priority"
               name="priority"
-              value={newTask.priority}
+              value={task.priority}
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 text-gray-900 focus:border-rose-500 focus:outline-none
@@ -141,13 +150,13 @@ const TaskForm = ({ onAddTask }: TaskFormProps) => {
               htmlFor="createdAt"
               className="block text-sm font-medium text-gray-700"
             >
-              Created At
+              Creation Date
             </label>
             <input
               id="createdAt"
               type="date"
               name="createdAt"
-              value={newTask.createdAt}
+              value={task.createdAt}
               readOnly
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 text-gray-500 bg-gray-50 cursor-not-allowed"

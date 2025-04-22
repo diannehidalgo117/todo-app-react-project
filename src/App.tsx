@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Task, NewTaskInput } from "./types/Task";
 import Headers from "./components/Headers";
 import Greetings from "./components/Greetings";
 import TaskForm from "./components/TaskForm";
@@ -6,23 +7,30 @@ import TaskList from "./components/TaskList";
 import CalendarView from "./components/CalendarView";
 import AppLayout from "./components/AppLayout";
 import TaskStats from "./components/TaskStats";
-import { Task, NewTaskInput } from "./types/Task";
+import { formatToYYYYMMDD, convertFromMMDDYYYY } from "./utils/dateUtils";
 
 const App = () => {
-  // TODO: Initialize empty tasks
+  // Initialize tasks from localStorage or use default tasks
   const [tasks, setTasks] = useState<Task[]>(() => {
     const savedTasks = localStorage.getItem("tasks");
     if (savedTasks) {
-      return JSON.parse(savedTasks);
+      // Load tasks from localStorage, but convert any old MM/DD/YYYY to YYYY-MM-DD
+      const parsedTasks = JSON.parse(savedTasks);
+      return parsedTasks.map((task: Task) => ({
+        ...task,
+        dueDate: task.dueDate.includes("/")
+          ? convertFromMMDDYYYY(task.dueDate)
+          : task.dueDate
+      }));
     } else {
-      // TODO: Remove the default tasks
+      // Default tasks
       return [
         {
           id: 1,
           title: "Learn React",
           description:
             "Study React fundamentals including hooks, state management, and component lifecycle.",
-          dueDate: "04/30/2025",
+          dueDate: "2025-04-30",
           priority: "high",
           status: "in-progress",
           createdAt: "2025-04-18"
@@ -32,7 +40,7 @@ const App = () => {
           title: "Build Todo App",
           description:
             "Create a fully functional todo application with React and Tailwind CSS.",
-          dueDate: "05/15/2025",
+          dueDate: "2025-05-15",
           priority: "medium",
           status: "pending",
           createdAt: "2025-04-19"
@@ -42,7 +50,7 @@ const App = () => {
           title: "Learn Rust",
           description:
             "Explore Rust programming language for system-level development and WebAssembly applications.",
-          dueDate: "07/11/2025",
+          dueDate: "2025-07-11", // YYYY-MM-DD format
           priority: "low",
           status: "pending",
           createdAt: "2025-04-20"
@@ -51,14 +59,48 @@ const App = () => {
     }
   });
 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(tasks);
+
+  // Handle date selection from calendar
+  const handleDateSelect = (date: Date) => {
+    console.log("handleDateSelect called with:", date);
+    setSelectedDate(date);
+  };
+
+  // Filter tasks whenever selectedDate changes
+  useEffect(() => {
+    if (selectedDate) {
+      // Convert selectedDate to YYYY-MM-DD format for filtering
+      const formattedSelectedDate = formatToYYYYMMDD(selectedDate);
+
+      console.log("Filtering by date:", formattedSelectedDate);
+
+      // Filter tasks with matching dueDate in YYYY-MM-DD format
+      const filtered = tasks.filter((task) => {
+        return task.dueDate === formattedSelectedDate;
+      });
+
+      setFilteredTasks(filtered);
+      console.log("Filtered tasks count:", filtered.length);
+    } else {
+      // If no date selected, show all tasks
+      setFilteredTasks(tasks);
+    }
+  }, [selectedDate, tasks]);
+
+  // Reset filters
+  const clearDateFilter = () => {
+    console.log("Clearing date filter");
+    setSelectedDate(null);
+  };
+
   // Save tasks to localStorage whenever tasks change
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
   // Function to handle adding a new task
-  // This function is passed to the TaskForm component
-  // and is called when the form is submitted
   const handleAddTask = (taskData: NewTaskInput) => {
     const newTask: Task = {
       ...taskData,
@@ -73,9 +115,16 @@ const App = () => {
       <AppLayout
         header={<Headers />}
         greetings={<Greetings />}
-        calendar={<CalendarView />}
+        calendar={<CalendarView onDateSelect={handleDateSelect} />}
         taskForm={<TaskForm onAddTask={handleAddTask} />}
-        taskList={<TaskList tasks={tasks} setTasks={setTasks} />}
+        taskList={
+          <TaskList
+            tasks={filteredTasks}
+            setTasks={setTasks}
+            isFiltered={!!selectedDate}
+            onClearFilter={clearDateFilter}
+          />
+        }
         taskStats={<TaskStats tasks={tasks} />}
       />
     </>

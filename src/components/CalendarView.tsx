@@ -2,6 +2,11 @@ import { useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../styles/Calendar.css";
+import {
+  formatToYYYYMMDD,
+  formatDateToDisplay,
+  isSameDay
+} from "../utils/dateUtils";
 
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
@@ -13,15 +18,21 @@ interface CalendarOnChangeProps {
   view: string;
 }
 
-const CalendarView = () => {
+interface CalendarViewProps {
+  onDateSelect: (date: Date) => void;
+}
+
+const CalendarView = ({ onDateSelect }: CalendarViewProps) => {
   const [date, setDate] = useState<Value>(new Date());
-  // Add a separate state for the active month view
   const [activeStartDate, setActiveStartDate] = useState<Date>(new Date());
 
   const handleDateChange = (newDate: Value) => {
     setDate(newDate);
-    // TODO: add logic here to filter tasks according to the selected date
-    console.log(newDate);
+    // Call the onDateSelect callback with the selected date
+    if (newDate instanceof Date) {
+      onDateSelect(newDate);
+      console.log("Date selected:", formatToYYYYMMDD(newDate));
+    }
   };
 
   // Handle month/year navigation changes
@@ -33,18 +44,6 @@ const CalendarView = () => {
     }
   };
 
-  // Get day name (e.g., "Monday")
-  const getDayName = (date: Date): string => {
-    return date.toLocaleDateString("en-US", { weekday: "long" });
-  };
-
-  // Get formatted date (e.g., "January 1, 2023")
-  const getFormattedDate = (date: Date): string => {
-    return `${date.toLocaleString("default", {
-      month: "long"
-    })} ${date.getDate()}, ${date.getFullYear()}`;
-  };
-
   // Reset calendar to today's date
   const goToToday = () => {
     const today = new Date();
@@ -52,6 +51,10 @@ const CalendarView = () => {
 
     setDate(today);
     setActiveStartDate(today); // Also update the active month view
+
+    // Important: Call onDateSelect to update the filter in the parent component
+    onDateSelect(today);
+    console.log("Going back to today:", formatToYYYYMMDD(today));
   };
 
   return (
@@ -59,21 +62,25 @@ const CalendarView = () => {
       {/* Display the selected date and day name */}
       {date instanceof Date && (
         <div className="text-center py-6">
-          <h2 className="text-rose-400 font-normal">{getDayName(date)}</h2>
+          <h2 className="text-rose-400 font-normal">
+            {date.toLocaleDateString("en-US", { weekday: "long" })}
+          </h2>
           <p className="text-2xl font-bold text-gray-800 mt-1">
-            {getFormattedDate(date)}
+            {formatDateToDisplay(date)}
           </p>
 
-          {/* Today button*/}
-          <button
-            onClick={goToToday}
-            className="mt-3 px-4 py-1 bg-rose-50 hover:bg-rose-100
+          {/* Today button - only show if not on today's date */}
+          {!isSameDay(date, new Date()) && (
+            <button
+              onClick={goToToday}
+              className="mt-3 px-4 py-1 bg-rose-50 hover:bg-rose-100
                   text-rose-600 text-sm rounded-full transition-colors
                   border border-rose-200 focus:outline-none focus:ring-2
                   focus:ring-rose-500 focus:ring-offset-2"
-          >
-            Back to Today
-          </button>
+            >
+              Back to Today
+            </button>
+          )}
         </div>
       )}
 

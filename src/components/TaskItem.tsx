@@ -1,3 +1,6 @@
+import React from "react";
+import { formatToDisplayDate } from "../utils/dateUtils";
+
 interface TaskItemProps {
   id: number;
   title: string;
@@ -71,14 +74,14 @@ const TaskItem = ({
         {dueDate && (
           <div className="text-gray-600">
             <span className="font-medium mr-1">Due:</span>
-            <span>{dueDate}</span>
+            <span>{formatToDisplayDate(dueDate)}</span>
           </div>
         )}
 
         {/* Created date */}
         <div className="text-gray-500">
           <span className="font-medium mr-1">Created:</span>
-          <span>{new Date(createdAt).toLocaleDateString()}</span>
+          <span>{formatToDisplayDate(createdAt)}</span>
         </div>
       </div>
     </div>
