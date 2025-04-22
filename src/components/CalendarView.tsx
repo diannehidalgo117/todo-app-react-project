@@ -6,13 +6,31 @@ import "../styles/Calendar.css";
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
+interface CalendarOnChangeProps {
+  action: string;
+  activeStartDate: Date | null;
+  value: Value;
+  view: string;
+}
+
 const CalendarView = () => {
   const [date, setDate] = useState<Value>(new Date());
+  // Add a separate state for the active month view
+  const [activeStartDate, setActiveStartDate] = useState<Date>(new Date());
 
   const handleDateChange = (newDate: Value) => {
     setDate(newDate);
-    // TODO: add logic here to filter tasks by the selected date
+    // TODO: add logic here to filter tasks according to the selected date
     console.log(newDate);
+  };
+
+  // Handle month/year navigation changes
+  const handleActiveStartDateChange = ({
+    activeStartDate: newActiveStartDate
+  }: CalendarOnChangeProps) => {
+    if (newActiveStartDate) {
+      setActiveStartDate(newActiveStartDate);
+    }
   };
 
   // Get day name (e.g., "Monday")
@@ -20,13 +38,22 @@ const CalendarView = () => {
     return date.toLocaleDateString("en-US", { weekday: "long" });
   };
 
+  // Get formatted date (e.g., "January 1, 2023")
   const getFormattedDate = (date: Date): string => {
     return `${date.toLocaleString("default", {
       month: "long"
     })} ${date.getDate()}, ${date.getFullYear()}`;
   };
 
-  // TODO: add logic to go back to today's date
+  // Reset calendar to today's date
+  const goToToday = () => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    setDate(today);
+    setActiveStartDate(today); // Also update the active month view
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       {/* Display the selected date and day name */}
@@ -36,6 +63,17 @@ const CalendarView = () => {
           <p className="text-2xl font-bold text-gray-800 mt-1">
             {getFormattedDate(date)}
           </p>
+
+          {/* Today button*/}
+          <button
+            onClick={goToToday}
+            className="mt-3 px-4 py-1 bg-rose-50 hover:bg-rose-100
+                  text-rose-600 text-sm rounded-full transition-colors
+                  border border-rose-200 focus:outline-none focus:ring-2
+                  focus:ring-rose-500 focus:ring-offset-2"
+          >
+            Back to Today
+          </button>
         </div>
       )}
 
@@ -49,6 +87,9 @@ const CalendarView = () => {
               month: "long"
             })} ${date.getFullYear()}`
           }
+          view="month"
+          onActiveStartDateChange={handleActiveStartDateChange}
+          activeStartDate={activeStartDate}
         />
       </div>
     </div>
