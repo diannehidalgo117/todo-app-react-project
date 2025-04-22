@@ -1,6 +1,7 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Task } from "../types/Task";
 import TaskItem from "./TaskItem";
+import TaskEditModal from "./TaskEditModal";
 
 interface TaskListProps {
   tasks: Task[];
@@ -9,14 +10,59 @@ interface TaskListProps {
   onClearFilter?: () => void;
 }
 
-// TODO: Add edit, delete, and done functionality
-
 const TaskList = ({
   tasks,
   setTasks,
   isFiltered = false,
   onClearFilter
 }: TaskListProps) => {
+  // State for task editing
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
+
+  // State for filtering by status
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+
+  // Handle task deletion
+  const handleDelete = (id: number) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  };
+
+  // Handle task status change (mark as done)
+  const handleStatusChange = (
+    id: number,
+    status: "pending" | "in-progress" | "completed"
+  ) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === id ? { ...task, status } : task))
+    );
+  };
+
+  // Handle task editing
+  const handleEdit = (task: Task) => {
+    setEditingTask(task);
+  };
+
+  // Handle saving edited task
+  const handleSaveEdit = (updatedTask: Task) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setEditingTask(null);
+  };
+
+  // Handle closing edit modal
+  const handleCloseEdit = () => {
+    setEditingTask(null);
+  };
+
+  // Filter tasks by status if needed
+  const filteredTasks = tasks.filter((task) => {
+    if (statusFilter === "all") return true;
+    if (statusFilter === "active") return task.status !== "completed";
+    if (statusFilter === "completed") return task.status === "completed";
+    return true;
+  });
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 overflow-y-auto max-h-screen">
       <div className="flex items-center justify-between mb-4">
@@ -34,13 +80,37 @@ const TaskList = ({
             </button>
           )}
 
-          <button className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm py-1 px-3 rounded-md transition-colors">
+          <button
+            onClick={() => setStatusFilter("all")}
+            className={`text-sm py-1 px-3 rounded-md transition-colors
+              ${
+                statusFilter === "all"
+                  ? "bg-rose-500 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+              }`}
+          >
             All
           </button>
-          <button className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm py-1 px-3 rounded-md transition-colors">
+          <button
+            onClick={() => setStatusFilter("active")}
+            className={`text-sm py-1 px-3 rounded-md transition-colors
+              ${
+                statusFilter === "active"
+                  ? "bg-rose-500 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+              }`}
+          >
             Active
           </button>
-          <button className="bg-gray-100 hover:bg-gray-200 text-gray-600 text-sm py-1 px-3 rounded-md transition-colors">
+          <button
+            onClick={() => setStatusFilter("completed")}
+            className={`text-sm py-1 px-3 rounded-md transition-colors
+              ${
+                statusFilter === "completed"
+                  ? "bg-rose-500 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-600"
+              }`}
+          >
             Completed
           </button>
         </div>
@@ -48,7 +118,7 @@ const TaskList = ({
 
       {/* Task items grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <TaskItem
             key={task.id}
             id={task.id}
@@ -58,15 +128,22 @@ const TaskList = ({
             priority={task.priority}
             status={task.status}
             createdAt={task.createdAt}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onStatusChange={handleStatusChange}
           />
         ))}
       </div>
 
       {/* No tasks message */}
-      {tasks.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-8">
+      {filteredTasks.length === 0 && (
+        <div className="flex flex-col items-center justify-center py-8 animate-fade-in">
           <p className="text-center text-gray-500">
-            {isFiltered ? "No tasks due for this date" : "No tasks available"}
+            {isFiltered
+              ? "No tasks due for this date"
+              : statusFilter !== "all"
+              ? `No ${statusFilter} tasks available`
+              : "No tasks available"}
           </p>
           <p className="text-center text-gray-400 text-sm mt-1">
             {isFiltered
@@ -74,6 +151,15 @@ const TaskList = ({
               : "Add a new task to get started!"}
           </p>
         </div>
+      )}
+
+      {/* Edit Modal */}
+      {editingTask && (
+        <TaskEditModal
+          task={editingTask}
+          onClose={handleCloseEdit}
+          onSave={handleSaveEdit}
+        />
       )}
     </div>
   );
