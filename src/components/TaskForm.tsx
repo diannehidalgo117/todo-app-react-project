@@ -1,12 +1,18 @@
 import React, { useState } from "react";
+import { NewTaskInput } from "../types/Task";
 
-const TaskForm = () => {
-  const [task, setTask] = useState({
+interface TaskFormProps {
+  onAddTask: (taskData: NewTaskInput) => void;
+}
+
+const TaskForm = ({ onAddTask }: TaskFormProps) => {
+  const [newTask, setNewTask] = useState<NewTaskInput>({
     title: "",
     description: "",
     dueDate: "",
     priority: "low",
-    status: "pending"
+    status: "pending",
+    createdAt: new Date().toISOString().split("T")[0] // YYYY-MM-DD format
   });
 
   const handleChange = (
@@ -15,26 +21,24 @@ const TaskForm = () => {
     >
   ) => {
     const { name, value } = e.target;
-    setTask((prevTask) => ({
+    setNewTask((prevTask) => ({
       ...prevTask,
       [name]: value
     }));
   };
-  // TODO: Add form validation
 
-  // TODO: Add form submission handling
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Task submitted:", task);
-    // TODO: Add the task to your tasks state/storage
-
+    // Call the onAddTask function passed from the parent component
+    onAddTask(newTask);
     // Reset the form
-    setTask({
+    setNewTask({
       title: "",
       description: "",
       dueDate: "",
       priority: "low",
-      status: "pending"
+      status: "pending",
+      createdAt: new Date().toISOString().split("T")[0]
     });
   };
 
@@ -55,7 +59,7 @@ const TaskForm = () => {
             id="title"
             type="text"
             name="title"
-            value={task.title}
+            value={newTask.title}
             onChange={handleChange}
             placeholder="What needs to be done?"
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
@@ -76,7 +80,7 @@ const TaskForm = () => {
           <textarea
             id="description"
             name="description"
-            value={task.description}
+            value={newTask.description}
             onChange={handleChange}
             placeholder="Add details about this task..."
             rows={3}
@@ -86,8 +90,8 @@ const TaskForm = () => {
           />
         </div>
 
-        {/* Two-column layout for date and priority */}
-        <div className="grid grid-cols-2 gap-4">
+        {/* Three-column layout for date, priority, and creation date */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Task Due Date */}
           <div className="space-y-2">
             <label
@@ -100,7 +104,7 @@ const TaskForm = () => {
               id="dueDate"
               type="date"
               name="dueDate"
-              value={task.dueDate}
+              value={newTask.dueDate}
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 text-gray-900 focus:border-rose-500 focus:outline-none
@@ -119,7 +123,7 @@ const TaskForm = () => {
             <select
               id="priority"
               name="priority"
-              value={task.priority}
+              value={newTask.priority}
               onChange={handleChange}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                 text-gray-900 focus:border-rose-500 focus:outline-none
@@ -129,6 +133,25 @@ const TaskForm = () => {
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+
+          {/* Task Creation Date - Read Only */}
+          <div className="space-y-2">
+            <label
+              htmlFor="createdAt"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Created At
+            </label>
+            <input
+              id="createdAt"
+              type="date"
+              name="createdAt"
+              value={newTask.createdAt}
+              readOnly
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                text-gray-500 bg-gray-50 cursor-not-allowed"
+            />
           </div>
         </div>
 

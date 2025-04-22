@@ -1,14 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
+import { Task } from "../types/Task";
 import TaskItem from "./TaskItem";
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  dueDate: string;
-  priority: string;
-  status: string;
-}
 
 interface TaskListProps {
   tasks: Task[];
@@ -45,6 +37,7 @@ const TaskList = ({ tasks, setTasks }: TaskListProps) => {
             dueDate={task.dueDate}
             priority={task.priority}
             status={task.status}
+            createdAt={task.createdAt}
           />
         ))}
       </div>
